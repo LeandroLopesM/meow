@@ -1,4 +1,7 @@
 import java.awt.Color;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Stack;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -6,10 +9,22 @@ import javax.swing.JLabel;
 
 public class Meow {
     JFrame root;
-    JFrame[] children;
+    Stack<JFrame> children;
 
     public Meow() {
         root = rootSetup();
+
+        root.addMouseListener( new MouseAdapter() {
+            @Override
+            public void mousePressed( MouseEvent e ) {
+                children.push( childSetup() );
+            }
+        } );
+    }
+
+
+    private JFrame childSetup() {
+        return null;
     }
 
     private JFrame rootSetup() {
