@@ -4,8 +4,10 @@ import java.awt.event.MouseEvent;
 import java.util.Stack;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JTextPane;
 
 public class Meow {
     JFrame root;
@@ -24,7 +26,15 @@ public class Meow {
 
 
     private JFrame childSetup() {
-        return null;
+        JFrame template = new JFrame("Meow");
+        template.add(new JLabel("Meow"));
+        JButton w = new JButton("mrow");
+        w.addActionListener( e -> {
+            children.push( childSetup() );
+        } );
+
+        template.add( w );
+        return template;
     }
 
     private JFrame rootSetup() {
