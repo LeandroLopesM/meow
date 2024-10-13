@@ -1,7 +1,13 @@
 import java.awt.Color;
+import java.awt.Toolkit;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowStateListener;
+import java.util.Random;
 import java.util.Stack;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -11,7 +17,7 @@ import javax.swing.JTextPane;
 
 public class Meow {
     JFrame root;
-    Stack<JFrame> children;
+    Stack<JFrame> children = new Stack<>();
 
     public Meow() {
         root = rootSetup();
@@ -22,6 +28,8 @@ public class Meow {
                 children.push( childSetup() );
             }
         } );
+
+        root.setVisible(true);
     }
 
 
@@ -34,6 +42,12 @@ public class Meow {
         } );
 
         template.add( w );
+        template.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        template.setSize(100,100);
+
+        template.setLocation( new Random().nextInt(0, Toolkit.getDefaultToolkit().getScreenSize().width) + template.getWidth() ,  new Random().nextInt(0, Toolkit.getDefaultToolkit().getScreenSize().height) + template.getHeight());
+
+        template.setVisible(true);
         return template;
     }
 
@@ -42,6 +56,23 @@ public class Meow {
         that.getContentPane().add(new JLabel( new ImageIcon("src/resources/plonk.jpg") ));
         that.setBackground(Color.black);
         that.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        that.pack();
+
+        that.addWindowListener( new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                try {
+                    while(!children.isEmpty()) {
+                        children.peek().setVisible(false);
+                        children.peek().dispose();
+                        children.pop();
+                        TimeUnit.MILLISECONDS.sleep(200);
+                    }
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
 
         return that;
     }
